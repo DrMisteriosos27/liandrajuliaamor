@@ -1,134 +1,70 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Você quer ser minha macaquinha?</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(to bottom, #ffafbd, #ffc3a0);
-      color: #ff4757;
-      text-align: center;
-      overflow: hidden;
+// Basic Information
+valentineName: "Liandra Julia"                    // Your Valentine's name
+pageTitle: "Você quer ser minha macaquinha?" // Browser tab title
+
+// Floating Background Elements
+floatingEmojis: {
+    hearts: ['❤️', '💖', '💝', '💗', '💓'],  // Heart emojis in background
+    bears: ['🧸', '🐻']                       // Bear emojis in background
+}
+
+// Questions and Buttons
+questions: {
+    first: {
+        text: "Você gosta de mim?",                   // First question
+        yesBtn: "Sim",                             // Yes button text
+        noBtn: "Não",                               // No button text
+        secretAnswer: "Eu Não Gosto de você, eu te amo!!! ❤️"  // Hidden message
+    },
+    second: {
+        text: "Quanto você me ama??",          // Second question
+        startText: "Desse tanto!",                   // Text before percentage
+        nextBtn: "Proximo ❤️"                         // Next button text
+    },
+    third: {
+        text: "Quer ser minha namorida?",      // Final question
+        yesBtn: "Já sou 🙄",                            // Yes button text
+        noBtn: "Não"                                // No button text
     }
-    h1, h2, p {
-      margin: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #ff6b6b;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background-color: #ff8787;
-    }
-    .emoji {
-      position: absolute;
-      animation: float 15s infinite ease-in-out;
-      font-size: 2rem;
-      opacity: 0.8;
-    }
-    @keyframes float {
-      0% { transform: translateY(100vh) translateX(0); }
-      100% { transform: translateY(-100vh) translateX(50px); }
-    }
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
+}
 
-  <h1>Liandra Julia 💖</h1>
-  <h2 id="question">Você gosta de mim?</h2>
+// Love Meter Messages
+loveMessages: {
+    extreme: "NOOOOOSAAA, VOCÊ ME AMA DESSE TANTO??? 🥰🚀💝",  // Shows above 5000%
+    high: "você me ama tanto?! 🚀💝",              // Shows above 1000%
+    normal: "Muito! 🥰"                           // Shows above 100%
+}
 
-  <div id="buttons">
-    <button onclick="responderSim()">Sim</button>
-    <button onclick="responderNao()">Não</button>
-  </div>
+// Final Celebration
+celebration: {
+    title: "Eu sou a pessoa mais sortuda do mundo por ter você!",     // Celebration title
+    message: "Agora venha pegar seu presente.. muito aconchego, abraços quentinhos, e um BEIJÃAAAO",          // Celebration message
+    emojis: "🎁💖🤗💝💋❤️💕"                        // Celebration emojis
+}
 
-  <p id="mensagem" class="hidden"></p>
+// Website Colors
+colors: {
+    backgroundStart: "#ffafbd",      // Background gradient start
+    backgroundEnd: "#ffc3a0",        // Background gradient end
+    buttonBackground: "#ff6b6b",     // Button color
+    buttonHover: "#ff8787",          // Button hover color
+    textColor: "#ff4757"            // Text color
+}
 
-  <audio id="bg-music" loop autoplay>
-    <source src="YOUR_CLOUDINARY_URL_HERE" type="audio/mpeg">
-  </audio>
+// Animation Settings
+animations: {
+    floatDuration: "15s",           // How long hearts float (10-20s)
+    floatDistance: "50px",          // Sideways movement (30-70px)
+    bounceSpeed: "0.5s",            // Bounce animation speed (0.3-0.7s)
+    heartExplosionSize: 1.5         // Final heart explosion size (1.2-2.0)
+}
 
-  <script>
-    const mensagens = {
-      secret: "Eu Não Gosto de você, eu te amo!!! ❤️",
-      loveLevels: {
-        extreme: "NOOOOOSAAA, VOCÊ ME AMA DESSE TANTO??? 🥰🚀💝",
-        high: "você me ama tanto?! 🚀💝",
-        normal: "Muito! 🥰"
-      },
-      celebration: {
-        title: "Eu sou a pessoa mais sortuda do mundo por ter você!",
-        message: "Agora venha pegar seu presente.. muito aconchego, abraços quentinhos, e um BEIJÃAAAO 🎁💖🤗💝💋❤️💕"
-      }
-    };
-
-    let etapa = 1;
-
-    function responderSim() {
-      const questionEl = document.getElementById('question');
-      const mensagemEl = document.getElementById('mensagem');
-      const buttons = document.getElementById('buttons');
-
-      if (etapa === 1) {
-        mensagemEl.textContent = mensagens.secret;
-        mensagemEl.classList.remove('hidden');
-        questionEl.textContent = "Quanto você me ama??";
-        buttons.innerHTML = '<button onclick="medirAmor()">Desse tanto!</button>';
-        etapa++;
-      } else if (etapa === 3) {
-        questionEl.textContent = mensagens.celebration.title;
-        mensagemEl.textContent = mensagens.celebration.message;
-        mensagemEl.classList.remove('hidden');
-        buttons.innerHTML = '';
-      }
-    }
-
-    function responderNao() {
-      alert("Tente novamente... 😢");
-    }
-
-    function medirAmor() {
-      const questionEl = document.getElementById('question');
-      const mensagemEl = document.getElementById('mensagem');
-      const buttons = document.getElementById('buttons');
-      const valor = Math.floor(Math.random() * 6000 + 100);
-
-      let msg;
-      if (valor > 5000) msg = mensagens.loveLevels.extreme;
-      else if (valor > 1000) msg = mensagens.loveLevels.high;
-      else msg = mensagens.loveLevels.normal;
-
-      mensagemEl.textContent = `Você me ama ${valor}% 😍\n${msg}`;
-      mensagemEl.classList.remove('hidden');
-
-      questionEl.textContent = "Quer ser minha namorida?";
-      buttons.innerHTML = `
-        <button onclick="responderSim()">Já sou 🙄</button>
-        <button onclick="responderNao()">Não</button>
-      `;
-      etapa++;
-    }
-
-    // Emojis flutuantes
-    const emojis = ['❤️', '💖', '💝', '💗', '💓', '🧸', '🐻'];
-    for (let i = 0; i < 30; i++) {
-      const emoji = document.createElement('div');
-      emoji.classList.add('emoji');
-      emoji.style.left = Math.random() * 100 + 'vw';
-      emoji.style.animationDuration = (10 + Math.random() * 10) + 's';
-      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      document.body.appendChild(emoji);
-    }
-  </script>
-</body>
-</html>
+// Music Settings
+music: {
+    enabled: true, // Music feature is enabled
+    autoplay: true, // Try to autoplay (note: some browsers may block this)
+    musicUrl: "YOUR_CLOUDINARY_URL_HERE", // Paste your music URL here
+    startText: "🎵 Play Music", // Button text to start music
+    stopText: "🔇 Stop Music", // Button text to stop music
+    volume: 0.5 // Volume level (0.0 to 1.0)
+}
