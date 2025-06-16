@@ -1,70 +1,109 @@
-// Basic Information
-valentineName: "Liandra Julia"                    // Your Valentine's name
-pageTitle: "Você quer ser minha macaquinha?" // Browser tab title
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title id="page-title">Carregando...</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1 id="valentine-name">❤️</h1>
+  <h2 id="question-text"></h2>
 
-// Floating Background Elements
-floatingEmojis: {
-    hearts: ['❤️', '💖', '💝', '💗', '💓'],  // Heart emojis in background
-    bears: ['🧸', '🐻']                       // Bear emojis in background
-}
+  <div id="buttons"></div>
+  <p id="message" class="hidden"></p>
 
-// Questions and Buttons
-questions: {
-    first: {
-        text: "Você gosta de mim?",                   // First question
-        yesBtn: "Sim",                             // Yes button text
-        noBtn: "Não",                               // No button text
-        secretAnswer: "Eu Não Gosto de você, eu te amo!!! ❤️"  // Hidden message
-    },
-    second: {
-        text: "Quanto você me ama??",          // Second question
-        startText: "Desse tanto!",                   // Text before percentage
-        nextBtn: "Proximo ❤️"                         // Next button text
-    },
-    third: {
-        text: "Quer ser minha namorida?",      // Final question
-        yesBtn: "Já sou 🙄",                            // Yes button text
-        noBtn: "Não"                                // No button text
+  <audio id="music-player" loop></audio>
+
+  <script src="config.js"></script>
+  <script>
+    let step = 1;
+
+    // Carregando configurações
+    document.title = config.pageTitle;
+    document.getElementById('valentine-name').textContent = config.valentineName;
+    document.body.style.background = `linear-gradient(to bottom, ${config.colors.backgroundStart}, ${config.colors.backgroundEnd})`;
+    document.body.style.color = config.colors.textColor;
+
+    const questionEl = document.getElementById('question-text');
+    const buttonsEl = document.getElementById('buttons');
+    const messageEl = document.getElementById('message');
+
+    const music = document.getElementById('music-player');
+    if (config.music.enabled) {
+      music.src = config.music.musicUrl;
+      music.volume = config.music.volume;
+      if (config.music.autoplay) {
+        music.play().catch(() => {});
+      }
     }
-}
 
-// Love Meter Messages
-loveMessages: {
-    extreme: "NOOOOOSAAA, VOCÊ ME AMA DESSE TANTO??? 🥰🚀💝",  // Shows above 5000%
-    high: "você me ama tanto?! 🚀💝",              // Shows above 1000%
-    normal: "Muito! 🥰"                           // Shows above 100%
-}
+    // Etapa 1
+    function showFirstQuestion() {
+      questionEl.textContent = config.questions.first.text;
+      buttonsEl.innerHTML = `
+        <button onclick="sayYes()">${config.questions.first.yesBtn}</button>
+        <button onclick="sayNo()">${config.questions.first.noBtn}</button>
+      `;
+    }
 
-// Final Celebration
-celebration: {
-    title: "Eu sou a pessoa mais sortuda do mundo por ter você!",     // Celebration title
-    message: "Agora venha pegar seu presente.. muito aconchego, abraços quentinhos, e um BEIJÃAAAO",          // Celebration message
-    emojis: "🎁💖🤗💝💋❤️💕"                        // Celebration emojis
-}
+    function sayYes() {
+      if (step === 1) {
+        messageEl.textContent = config.questions.first.secretAnswer;
+        messageEl.classList.remove('hidden');
+        step++;
+        setTimeout(showSecondQuestion, 1500);
+      } else if (step === 3) {
+        questionEl.textContent = config.celebration.title;
+        messageEl.textContent = config.celebration.message + "\n" + config.celebration.emojis;
+        messageEl.classList.remove('hidden');
+        buttonsEl.innerHTML = "";
+      }
+    }
 
-// Website Colors
-colors: {
-    backgroundStart: "#ffafbd",      // Background gradient start
-    backgroundEnd: "#ffc3a0",        // Background gradient end
-    buttonBackground: "#ff6b6b",     // Button color
-    buttonHover: "#ff8787",          // Button hover color
-    textColor: "#ff4757"            // Text color
-}
+    function sayNo() {
+      alert("Errado! Tente novamente! 😢");
+    }
 
-// Animation Settings
-animations: {
-    floatDuration: "15s",           // How long hearts float (10-20s)
-    floatDistance: "50px",          // Sideways movement (30-70px)
-    bounceSpeed: "0.5s",            // Bounce animation speed (0.3-0.7s)
-    heartExplosionSize: 1.5         // Final heart explosion size (1.2-2.0)
-}
+    function showSecondQuestion() {
+      questionEl.textContent = config.questions.second.text;
+      messageEl.classList.add('hidden');
+      buttonsEl.innerHTML = `<button onclick="showLoveMeter()">${config.questions.second.startText}</button>`;
+      step++;
+    }
 
-// Music Settings
-music: {
-    enabled: true, // Music feature is enabled
-    autoplay: true, // Try to autoplay (note: some browsers may block this)
-    musicUrl: "YOUR_CLOUDINARY_URL_HERE", // Paste your music URL here
-    startText: "🎵 Play Music", // Button text to start music
-    stopText: "🔇 Stop Music", // Button text to stop music
-    volume: 0.5 // Volume level (0.0 to 1.0)
-}
+    function showLoveMeter() {
+      const level = Math.floor(Math.random() * 6000 + 100);
+      let msg = config.loveMessages.normal;
+      if (level > 5000) msg = config.loveMessages.extreme;
+      else if (level > 1000) msg = config.loveMessages.high;
+
+      messageEl.innerHTML = `Você me ama ${level}% 🥰<br>${msg}`;
+      messageEl.classList.remove('hidden');
+
+      questionEl.textContent = config.questions.third.text;
+      buttonsEl.innerHTML = `
+        <button onclick="sayYes()">${config.questions.third.yesBtn}</button>
+        <button onclick="sayNo()">${config.questions.third.noBtn}</button>
+      `;
+      step++;
+    }
+
+    function createFloatingEmojis() {
+      const allEmojis = [...config.floatingEmojis.hearts, ...config.floatingEmojis.bears];
+      for (let i = 0; i < 30; i++) {
+        const e = document.createElement('div');
+        e.className = 'floating-emoji';
+        e.textContent = allEmojis[Math.floor(Math.random() * allEmojis.length)];
+        e.style.left = Math.random() * 100 + 'vw';
+        e.style.animationDuration = (10 + Math.random() * 10) + 's';
+        document.body.appendChild(e);
+      }
+    }
+
+    // Início
+    showFirstQuestion();
+    createFloatingEmojis();
+  </script>
+</body>
+</html>
